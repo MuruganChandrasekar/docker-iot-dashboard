@@ -63,8 +63,6 @@ time                host    region  value
 
 # BACKUP DATABASE THROUGH SHELL SCRIPT USING EXTRA INFLUXDB INSTANCE
 
-`( Database name should be there in as environment variable separated by ":" ) `
-
 ```console
 
 cmurugan@iotserver:~/iot/docker-ttn-dashboard$ docker exec -it dockerttndashboard_influxdb-backup_1 bash
