@@ -1,6 +1,6 @@
 # BUILD SETUP
 
-```sh 
+```console 
 
 cmurugan@iotserver:~/iot/docker-ttn-dashboard$ docker-compose up -d
 Creating network "dockerttndashboard_default" with the default driver
