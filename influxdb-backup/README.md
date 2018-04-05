@@ -19,7 +19,7 @@ Creating dockerttndashboard_apache_1 ... done
 
 ## status of docker container and databases
 
-```sh
+```console
 
 cmurugan@iotserver:~/iot/docker-ttn-dashboard$ docker-compose ps
                 Name                              Command               State                    Ports
@@ -65,7 +65,7 @@ time                host    region  value
 
 `( Database name should be there in as environment variable separated by ":" ) `
 
-```sh
+```console
 
 cmurugan@iotserver:~/iot/docker-ttn-dashboard$ docker exec -it dockerttndashboard_influxdb-backup_1 bash
 
@@ -88,7 +88,7 @@ Creating backup for testdb
 
 ## Backup has been taken in the below folder
 
-```sh
+```console
 
 root@4e5dbfd20c5c:/opt/influxdb-backup# cd /var/lib/influxdb-backup/
 root@4e5dbfd20c5c:/var/lib/influxdb-backup# ls -al
@@ -104,7 +104,7 @@ drwxr-xr-x 14 root root   4096 Oct 25 14:08 ..
 ```
 ## Drop the "testdb" database for checking purpose
 
-```sh
+```console
 
 cmurugan@iotserver:~/iot/docker-ttn-dashboard$ docker-compose exec influxdb influx
 Connected to http://localhost:8086 version 1.2.4
@@ -129,7 +129,7 @@ _internal
 
 `(Stop the influxdb database in order to restore dropped "testdb" database)`
 
-```sh
+```console
 
 cmurugan@iotserver:~/iot/docker-ttn-dashboard$ docker-compose stop influxdb
 Stopping dockerttndashboard_influxdb_1 ... done
@@ -147,7 +147,7 @@ unpacking /var/lib/influxdb/data/testdb/autogen/2/000000001-000000001.tsm
 
 ## Start the influxdb database and check for whether database has been restored
 
-```sh
+```console
 
 cmurugan@iotserver:~/iot/docker-ttn-dashboard$ docker-compose start influxdb
 Starting influxdb ... done
