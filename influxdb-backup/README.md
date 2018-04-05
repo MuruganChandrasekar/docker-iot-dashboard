@@ -84,7 +84,7 @@ Creating backup for testdb
 
 ```
 
-## Backup has been taken in the below folder
+### Backup has been taken in the below folder
 
 ```console
 
@@ -100,7 +100,7 @@ drwxr-xr-x 14 root root   4096 Oct 25 14:08 ..
 -rw-r--r--  1 root root   2048 Oct 25 14:49 testdb.autogen.00002.00
 
 ```
-## Drop the "testdb" database for checking purpose
+### Drop the "testdb" database for checking purpose
 
 ```console
 
@@ -143,7 +143,7 @@ unpacking /var/lib/influxdb/data/testdb/autogen/2/000000001-000000001.tsm
 
 ```
 
-## Start the influxdb database and check for whether database has been restored
+### Start the influxdb database and check for whether database has been restored
 
 ```console
 
