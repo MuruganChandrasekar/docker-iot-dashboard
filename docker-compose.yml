@@ -129,7 +129,7 @@ services:
 
   influxdb:
     restart: unless-stopped
-    image: "influxdb:${TTN_DASHBOARD_INFLUXDB_VERSION:-latest}"
+    image: "influxdb:${TTN_DASHBOARD_INFLUXDB_VERSION:-1.4.0}"
     volumes:
       - "${TTN_DASHBOARD_DATA}influxdb:/var/lib/influxdb"
     environment:
@@ -144,7 +144,7 @@ services:
       context: ./influxdb-backup
       dockerfile: Dockerfile
       args: 
-        version: "${TTN_DASHBOARD_INFLUXDB_VERSION:-latest}"
+        version: "${TTN_DASHBOARD_INFLUXDB_VERSION:-1.4.0}"
     volumes:
      # Dircectory for database backup inside "./data" 
       - "${TTN_DASHBOARD_DATA}influx-backup:/var/lib/influxdb-backup"
