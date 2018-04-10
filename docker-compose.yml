@@ -122,7 +122,7 @@ services:
     user: "root"
     volumes:
       - "${TTN_DASHBOARD_DATA}node-red:/data"
-    # nodered opens ports on influxdb so it needs to be able to talk to it.
+    # nodered opens ports on influxdb and postfix so it needs to be able to talk to it.
     links:
       - influxdb
       - postfix
@@ -156,6 +156,7 @@ services:
       AWS_ACCESS_KEY_ID: "${TTN_DASHBOARD_AWS_ACCESS_KEY_ID:-.}"
       AWS_SECRET_ACCESS_KEY: "${TTN_DASHBOARD_AWS_SECRET_ACCESS_KEY:-.}"
       AWS_DEFAULT_REGION: "${TTN_DASHBOARD_AWS_DEFAULT_REGION:-.}"
+    # grafana opens ports on influxdb, so it needs to be able to talk to it.
     links:
       - influxdb
 

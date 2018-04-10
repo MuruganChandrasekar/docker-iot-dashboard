@@ -30,6 +30,7 @@ RUN mkdir -p /var/lib/amazon-bucket
 # Backup script
 COPY showdb.sh /bin/showdb.sh
 COPY backup.sh /bin/backup.sh
+RUN chmod +x /bin/showdb.sh
 RUN chmod +x /bin/backup.sh
 
 # Backup directory
