@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y \
     debconf-utils
 
 # passing arguments to build postfix image
+ARG hostname
 ARG relay_ip
-ARG host_name
 ARG domain
 
 # Install Postfix
@@ -20,15 +20,17 @@ run echo "postfix postfix/mailname string $host_name" | debconf-set-selections
 run echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections
 run apt-get update && apt-get install -y postfix
 run postconf -e relayhost=$relay_ip
-run postconf -e myhostname=$host_name
+run postconf -e myhostname=$hostname
 run postconf -e mydomain=$domain
-run postconf -e smtp_generic_maps=hash:/etc/postfix/generic
-run postconf -e mynetworks="127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.18.0.0/16" 
+run postconf -e masquerade_domains=$domain
+run postconf -e mydestination="\$myhostname, $hostname, localhost, localhost.localdomain, localhost"
+run postconf -e mynetworks="127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.0.0.0/8" 
 run postconf -e smtpd_use_tls=no
-run echo $host_name > /etc/mailname
+run echo $domain > /etc/mailname
 
-# This will replace local mail addresses by valid Internet addresses when mail leaves the machine via SMTP. so please change it according to container.
-run echo "root@aa7fde2ee7f1 iotmail@example.com" > /etc/postfix/generic
+# This will replace local mail addresses by valid Internet addresses when mail leaves the machine via SMTP. 
+run echo "root@${hostname} iotmail@${domain}" > /etc/postfix/generic
+run postconf -e smtp_generic_maps=hash:/etc/postfix/generic
 run postmap /etc/postfix/generic
 
 # mail command would be used for sending mails
