@@ -191,7 +191,14 @@ services:
       context: ./influxdb
       dockerfile: Dockerfile
       args:
-        version: "${TTN_DASHBOARD_INFLUXDB_VERSION:-latest}"
+        distrib_id: "${TTN_DASHBOARD_OS_distrib_id:-ubuntu}"
+        distrib_codename: "${TTN_DASHBOARD_OS_distrib_id:-xenial}"
+        hostname: "${TTN_DASHBOARD_INFLUXDB_MAIL_HOST_NAME:-.}"
+        relay_ip: "${TTN_DASHBOARD_MAIL_RELAY_IP:-.}"
+        domain: "${TTN_DASHBOARD_MAIL_DOMAIN:-.}"
+    hostname: "${TTN_DASHBOARD_INFLUXDB_MAIL_HOST_NAME:-.}"
+    ports:
+      - "${TTN_DASHBOARD_PORT_INFLUXDB:-8086}:8086"
     volumes:
       - "${TTN_DASHBOARD_DATA}influxdb:/var/lib/influxdb"
      # Dircectory for influxdb metadata and database backup inside "./data" 
@@ -201,6 +208,7 @@ services:
       INFLUXDB_INIT_PWD: "${TTN_DASHBOARD_INFLUXDB_ADMIN_PASSWORD:-!notset}"
       PRE_CREATE_DB: "${TTN_DASHBOARD_INFLUXDB_INITIAL_DATABASE_NAME:-demo}"
       INFLUXDB_BIND_ADDRESS: "influxdb:8088"
+      INFLUXDB_BACKUP_MAIL: "${TTN_DASHBOARD_INFLUXDB_BACKUP_EMAIL:-}"
     # Backuping influxdb metadata and database to cloud
       SOURCE_NAME: "${TTN_DASHBOARD_INFLUXDB_HOST_NAME:-influxdb}"    
       S3_BUCKET_INFLUXDB: "${TTN_DASHBOARD_AWS_S3_BUCKET_INFLUXDB:-.}"
