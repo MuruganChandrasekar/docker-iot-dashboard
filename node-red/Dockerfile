@@ -11,12 +11,12 @@ FROM nodered/node-red:${node_red_version}
 # To avoid SSL certification issue
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
-# add the influxDB connector
-RUN npm install node-red-contrib-influxdb
-RUN npm install node-red-node-base64
+# Install required modules
+ARG node_red_install_modules
+RUN npm install ${node_red_install_modules}
+RUN npm audit fix
 
 # add The Things Network connector
-# passing arguments to build specific 
 ARG node_red_contrib_ttn_version
 RUN npm install node-red-contrib-ttn@${node_red_contrib_ttn_version}
 
