@@ -159,6 +159,7 @@ services:
       args:
         node_red_version: "${TTN_DASHBOARD_NODE_RED_VERSION:-latest}"
         node_red_contrib_ttn_version: "${TTN_DASHBOARD_NODE_RED_CONTRIB_TTN_VERSION:-latest}"
+        node_red_install_modules: "${TTN_DASHBOARD_NODE_RED_INSTALL_MODULES:-}"
     user: "root"
     volumes:
       - "${TTN_DASHBOARD_DATA}node-red:/data"
