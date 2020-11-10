@@ -68,8 +68,8 @@ COPY influxdb_cron.sh /etc/my_init.d/influxdb_cron.sh
 RUN chmod +x /etc/my_init.d/influxdb_cron.sh
 
 # Start the postfix daemon during container startup
-COPY postfix.sh /etc/my_init.d/postfix.sh
-RUN chmod +x /etc/my_init.d/postfix.sh
+##COPY postfix.sh /etc/my_init.d/postfix.sh
+##RUN chmod +x /etc/my_init.d/postfix.sh
 
 # Starting influxd daemon service 
 RUN mkdir /etc/service/influx

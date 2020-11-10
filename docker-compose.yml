@@ -270,11 +270,72 @@ services:
       context: ./postfix
       dockerfile: Dockerfile
       args:
-        hostname: "${IOT_DASHBOARD_MAIL_HOST_NAME:-.}"
-        relay_ip: "${IOT_DASHBOARD_MAIL_RELAY_IP:-.}"
-        domain: "${IOT_DASHBOARD_MAIL_DOMAIN:-.}"
+        hostname: "${IOT_DASHBOARD_MAIL_HOST_NAME:-}"
+        relay_ip: "${IOT_DASHBOARD_MAIL_RELAY_IP:-}"
+        domain: "${IOT_DASHBOARD_MAIL_DOMAIN:-}"
     expose:
       - "25"
-    hostname: "${IOT_DASHBOARD_MAIL_HOST_NAME:-.}"
+    hostname: "${IOT_DASHBOARD_MAIL_HOST_NAME:-}"
+
+  apiserver:
+    restart: unless-stopped
+    build:
+      context: ./apiserver
+      dockerfile: Dockerfile
+      #ports:
+      #- "${IOT_DASHBOARD_PORT_APISERVER_SSH:-6789}:22"
+        #expose:
+    ports:
+      - "8081:8081"
+      - "8082:8082"
+      - "${IOT_DASHBOARD_PORT_APISERVER_SSH:-6789}:22"
+    volumes:
+      - "${IOT_DASHBOARD_DATA}apiserver:/apiserver"
+    hostname: "${IOT_DASHBOARD_APISERVER_HOST_NAME:-apiserver}"
+
+  mongodb:
+    restart: unless-stopped
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mcci
+      MONGO_INITDB_ROOT_PASSWORD: isee#567
+      #expose:
+      #ports:
+      #- "27017:27017"
+    expose:
+      - "27017"
+    volumes:
+      - ${IOT_DASHBOARD_DATA}mongodb:/data/db
+    hostname: "${IOT_DASHBOARD_MONGODB_HOST_NAME:-mongodb}"
+
+  angularjs:
+    restart: unless-stopped
+    build:
+      context: ./angularjs
+      dockerfile: Dockerfile
+    ports:
+      - "${IOT_DASHBOARD_PORT_SSH:-6790}:22"
+      - "4205:4200"
+    volumes:
+      - "${IOT_DASHBOARD_DATA}angularjs:/angularjs"
+    hostname: "${IOT_DASHBOARD_MQTT_HOST_NAME:-angularjs}"
+
+
+  dncapi:
+    restart: unless-stopped
+    build:
+      context: ./dncapi
+      dockerfile: Dockerfile
+      #ports:
+      #- "${IOT_DASHBOARD_PORT_APISERVER_SSH:-6789}:22"
+        #expose:
+    ports:
+      - "8881:8881"
+      - "${IOT_DASHBOARD_PORT_APISERVER_SSH:-8822}:22"
+    volumes:
+      - "${IOT_DASHBOARD_DATA}apiserver:/dncapi"
+      - "${IOT_DASHBOARD_DATA}revz-apiserver:/revz-dncapi"
+      - "${IOT_DASHBOARD_DATA}prabhus-apiserver:/prabhus-dncapi"
+    hostname: "${IOT_DASHBOARD_APISERVER_HOST_NAME:-dncapi}"
 
 ### end of file ###

@@ -38,7 +38,7 @@ run apt-get install -y mailutils
 
 # Start the postfix daemon during container startup
 RUN mkdir -p /etc/my_init.d
-COPY postfix.sh /etc/my_init.d/postfix.sh
-RUN chmod +x /etc/my_init.d/postfix.sh
+##COPY postfix.sh /etc/my_init.d/postfix.sh
+##RUN chmod +x /etc/my_init.d/postfix.sh
 
 
