@@ -13,3 +13,4 @@ jobs:
           hostname -f
           pwd
           ls -a
+          echo "$IOT_DASHBOARD_NGINX_FQDN"
