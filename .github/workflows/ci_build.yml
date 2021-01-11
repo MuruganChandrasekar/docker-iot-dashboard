@@ -1,0 +1,13 @@
+name: Testing IoT-Dashboard setup
+
+on: [push]
+
+jobs:
+  run-github-actions:
+    runs-on: self-hosted
+    steps:
+      - name: List Files
+        run: |
+          hostname -f
+          pwd
+          ls -a
