@@ -6,6 +6,8 @@ jobs:
   run-github-actions:
     runs-on: self-hosted
     steps:
+      - name: Checkout
+        uses: actions/checkout@docker-ttn-dashboard-v1.0
       - name: List Files
         run: |
           hostname -f
