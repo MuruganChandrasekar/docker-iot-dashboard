@@ -13,4 +13,6 @@ jobs:
           hostname -f
           pwd
           ls -a
+          cp /github-action/docker-iot-dashboard/env .env
+          cat .env
           echo "$IOT_DASHBOARD_NGINX_FQDN"
