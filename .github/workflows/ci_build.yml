@@ -15,4 +15,15 @@ jobs:
           ls -a
           cp /github-action/docker-iot-dashboard/env .env
           cat .env
-          echo "$IOT_DASHBOARD_NGINX_FQDN"
+          docker-compose pull
+          docker-compose build
+          docker-compose run nginx /bin/bash
+          touch /etc/nginx/authdata/influxdb/.htpasswd
+          touch /etc/nginx/authdata/nodered/.htpasswd
+          chown www-data /etc/nginx/authdata/influxdb/.htpasswd
+          chown www-data /etc/nginx/authdata/nodered/.htpasswd
+          echo "test101" | htpasswd -c -i /etc/nginx/authdata/nodered/.htpasswd admin
+          echo "test101" | htpasswd -c -i /etc/nginx/authdata/nodered/.htpasswd admin
+          exit
+          
+          echo "successfully created"
