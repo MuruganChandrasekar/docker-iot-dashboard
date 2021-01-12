@@ -288,4 +288,46 @@ services:
       - "25"
     hostname: "${IOT_DASHBOARD_MAIL_HOST_NAME:-.}"
 
-### end of file ###
+  mongodb:
+    restart: unless-stopped
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mcci
+      MONGO_INITDB_ROOT_PASSWORD: isee#567
+    expose:
+      - "27017"
+    volumes:
+      - ${IOT_DASHBOARD_DATA}mongodb:/data/db
+    hostname: "${IOT_DASHBOARD_MONGODB_HOST_NAME:-mongodb}"
+
+  angularjs:
+    restart: unless-stopped
+    build:
+      context: ./angularjs
+      dockerfile: Dockerfile
+    expose:
+      - "4200"
+    ports:
+      - "${IOT_DASHBOARD_PORT_SSH:-6790}:22"
+    volumes:
+      - "${IOT_DASHBOARD_DATA}angularjs:/angularjs"
+    hostname: "${IOT_DASHBOARD_MQTT_HOST_NAME:-angularjs}"
+
+
+  dncapi:
+    restart: unless-stopped
+    build:
+      context: ./dncapi
+      dockerfile: Dockerfile
+    expose:
+      - "8881"
+      - "8891"
+      - "8892"
+    ports:
+      - "${IOT_DASHBOARD_PORT_APISERVER_SSH:-8822}:22"
+    volumes:
+      - "${IOT_DASHBOARD_DATA}dncapi:/dncapi"
+    hostname: "${IOT_DASHBOARD_APISERVER_HOST_NAME:-dncapi}" 
+    
+    
+    ### end of file ###
