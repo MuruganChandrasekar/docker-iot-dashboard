@@ -8,27 +8,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
-      - name: List Files
+      - name: Building Docker setup 
         run: |
-          hostname -f
-          pwd
-          ls -a
           cp /github-action/docker-iot-dashboard/env .env
-          cat .env
           docker-compose pull
           docker-compose build
-      - name: Running Nginx Container
+      - name: Running IoT-dashboard Container
         run: |
           docker-compose run nginx bash -c "touch /etc/nginx/authdata/influxdb/.htpasswd ; touch /etc/nginx/authdata/nodered/.htpasswd ; chown www-data /etc/nginx/authdata/influxdb/.htpasswd ; chown www-data /etc/nginx/authdata/nodered/.htpasswd ; echo "test101" | htpasswd -c -i /etc/nginx/authdata/nodered/.htpasswd admin ; echo "test101" | htpasswd -c -i /etc/nginx/authdata/nodered/.htpasswd admin"
-          docker-compose up -d --build
-          hostname
+          docker-compose up --build
           sleep 3m
-          #touch /etc/nginx/authdata/influxdb/.htpasswd
-          #touch /etc/nginx/authdata/nodered/.htpasswd
-          #chown www-data /etc/nginx/authdata/influxdb/.htpasswd
-          #chown www-data /etc/nginx/authdata/nodered/.htpasswd
-          #echo "test101" | htpasswd -c -i /etc/nginx/authdata/nodered/.htpasswd admin
-          #echo "test101" | htpasswd -c -i /etc/nginx/authdata/nodered/.htpasswd admin
-          #exit
-          
           echo "successfully created"
