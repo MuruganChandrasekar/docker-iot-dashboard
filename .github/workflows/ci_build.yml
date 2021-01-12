@@ -17,8 +17,11 @@ jobs:
           cat .env
           docker-compose pull
           docker-compose build
+      - name: Running Nginx Container
+        run: |
           docker-compose run nginx /bin/bash
-          sleep 20
+          hostname
+          #sleep 20
           #touch /etc/nginx/authdata/influxdb/.htpasswd
           #touch /etc/nginx/authdata/nodered/.htpasswd
           #chown www-data /etc/nginx/authdata/influxdb/.htpasswd
