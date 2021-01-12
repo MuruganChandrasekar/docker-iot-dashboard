@@ -19,9 +19,10 @@ jobs:
           docker-compose build
       - name: Running Nginx Container
         run: |
-          docker-compose run nginx /bin/bash
+          docker-compose run nginx bash -c "touch /etc/nginx/authdata/influxdb/.htpasswd ; touch /etc/nginx/authdata/nodered/.htpasswd ; chown www-data /etc/nginx/authdata/influxdb/.htpasswd ; chown www-data /etc/nginx/authdata/nodered/.htpasswd ; echo "test101" | htpasswd -c -i /etc/nginx/authdata/nodered/.htpasswd admin ; echo "test101" | htpasswd -c -i /etc/nginx/authdata/nodered/.htpasswd admin"
+          docker-compose up -d --build
           hostname
-          #sleep 20
+          sleep 3m
           #touch /etc/nginx/authdata/influxdb/.htpasswd
           #touch /etc/nginx/authdata/nodered/.htpasswd
           #chown www-data /etc/nginx/authdata/influxdb/.htpasswd
