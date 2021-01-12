@@ -16,6 +16,7 @@ jobs:
       - name: Running IoT-dashboard Container
         run: |
           docker-compose run nginx bash -c "touch /etc/nginx/authdata/influxdb/.htpasswd ; touch /etc/nginx/authdata/nodered/.htpasswd ; chown www-data /etc/nginx/authdata/influxdb/.htpasswd ; chown www-data /etc/nginx/authdata/nodered/.htpasswd ; echo "test101" | htpasswd -c -i /etc/nginx/authdata/nodered/.htpasswd admin ; echo "test101" | htpasswd -c -i /etc/nginx/authdata/nodered/.htpasswd admin"
-          docker-compose up --build
-          sleep 3m
+          docker-compose up -d --build
+          sleep 2m
+          docker-compose down
           echo "successfully created"
