@@ -19,4 +19,4 @@ jobs:
           docker-compose up -d --build
           sleep 2m
           docker-compose down
-          echo "successfully created"
+          echo "successfully created!"
