@@ -21,10 +21,6 @@ RUN set -x \
 	&& export DEBIAN_FRONTEND=noninteractive && apt-get update && ln -s /bin/true /usr/local/bin/systemctl && apt-get install -y \
                 ${MONGO_PACKAGE}=$MONGO_VERSION \
                 ${MONGO_PACKAGE}-tools=$MONGO_VERSION 
-       # && rm -f /usr/local/bin/systemctl \
-       # && rm -rf /var/lib/apt/lists/* \
-       # && rm -rf /var/lib/mongodb \
-       # && mv /etc/mongod.conf /etc/mongod.conf.orig
 
 #some basic package installation for troubleshooting
 RUN apt-get update && apt-get install -y \
