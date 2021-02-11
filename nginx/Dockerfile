@@ -12,7 +12,7 @@ RUN /usr/bin/add-apt-repository ppa:certbot/certbot && /usr/bin/apt-get update &
 RUN /usr/bin/apt-get install python-certbot-nginx -y
 
 # Copying Proxy files 
-COPY setup.sh proxy-*.conf /root/
+COPY mongo.txt setup.sh proxy-*.conf /root/
 
 # Running scripts during container startup for letsencrypt update and configuring proxy files behind Nginx
 RUN mkdir -p /etc/my_init.d

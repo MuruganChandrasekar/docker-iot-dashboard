@@ -58,6 +58,8 @@ if [ "$CERTBOT_TEST" != "test" ]; then
     /usr/sbin/nginx -s stop && echo "stopped successfully"
 fi
 
+sed -i $'/http {/{e cat /root/mongo.txt\n}' /etc/nginx/nginx.conf
+
 # now, add the fields to the virtual host section for https.
 set -- proxy-*.conf
 if [ "$1" != "proxy-*.conf" ] ; then

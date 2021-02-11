@@ -1,2 +1,2 @@
 #!/bin/sh
-cd /dncapi/dncapp && npm start
+cd /dncapi/dncapp && npm install && npm start

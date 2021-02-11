@@ -1,4 +1,0 @@
-#!/bin/sh
-cd /dncapi && npm start
-cd /dncapi/dncbe && npm start
-cd /dncapi/dncapp && npm start

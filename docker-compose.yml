@@ -166,6 +166,7 @@ services:
     ports:
       - "${IOT_DASHBOARD_PORT_HTTP:-80}:80"
       - "${IOT_DASHBOARD_PORT_HTTPS:-443}:443"
+      - "27020:27020"
     volumes:
       - "${IOT_DASHBOARD_DATA}docker-nginx/htdocs:/usr/local/nginx/htdocs"
       - "${IOT_DASHBOARD_DATA}docker-nginx/letsencrypt:/etc/letsencrypt"
@@ -235,15 +236,21 @@ services:
     volumes:
       - "${IOT_DASHBOARD_DATA}influxdb:/var/lib/influxdb"
      # Dircectory for influxdb metadata and database backup inside "./data"
-      - "${IOT_DASHBOARD_DATA}influx-backup:/var/lib/influxdb-backup"
+      - "${IOT_DASHBOARD_DATA}influxdb-backup:/var/lib/influxdb-backup"
       - "${IOT_DASHBOARD_DATA}influxdb-S3-bucket:/var/lib/influxdb-S3-bucket"
+      - "${IOT_DASHBOARD_DATA}mongodb/mongodb-S3-bucket:/var/lib/mongodb-S3-bucket"
+      - "${IOT_DASHBOARD_DATA}mongodb/mongodb_data:/var/lib/mongodb"
     environment:
       INFLUXDB_INIT_PWD: "${IOT_DASHBOARD_INFLUXDB_ADMIN_PASSWORD:-!notset}"
       PRE_CREATE_DB: "${IOT_DASHBOARD_INFLUXDB_INITIAL_DATABASE_NAME:-demo}"
       INFLUXDB_BIND_ADDRESS: "influxdb:8088"
       INFLUXDB_BACKUP_MAIL: "${IOT_DASHBOARD_INFLUXDB_BACKUP_EMAIL:-}"
+      MONGODB_BACKUP_MAIL: "${IOT_DASHBOARD_INFLUXDB_BACKUP_EMAIL:-}"
+      MONGO_INITDB_ROOT_USERNAME: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_USERNAME:-}"
+      MONGO_INITDB_ROOT_PASSWORD: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_PASSWORD:-}"
     # Backuping influxdb metadata and database to cloud
       SOURCE_NAME: "${IOT_DASHBOARD_CERTBOT_FQDN}"
+      S3_BUCKET_MONGODB: "${IOT_DASHBOARD_AWS_S3_BUCKET_MONGODB:-.}"
       S3_BUCKET_INFLUXDB: "${IOT_DASHBOARD_AWS_S3_BUCKET_INFLUXDB:-.}"
       AWS_ACCESS_KEY_ID: "${IOT_DASHBOARD_AWS_ACCESS_KEY_ID:-.}"
       AWS_SECRET_ACCESS_KEY: "${IOT_DASHBOARD_AWS_SECRET_ACCESS_KEY:-.}"
@@ -292,27 +299,28 @@ services:
     restart: unless-stopped
     image: mongo:latest
     environment:
-      MONGO_INITDB_ROOT_USERNAME: mcci
-      MONGO_INITDB_ROOT_PASSWORD: isee#567
-    expose:
-      - "27017"
+      MONGO_INITDB_ROOT_USERNAME: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_USERNAME:-}"
+      MONGO_INITDB_ROOT_PASSWORD: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_PASSWORD:-}"
+      #expose:
+    ports:
+      - "27017:27017"
     volumes:
-      - ${IOT_DASHBOARD_DATA}mongodb:/data/db
+      - "${IOT_DASHBOARD_DATA}mongodb/mongodb_data:/data/db"
     hostname: "${IOT_DASHBOARD_MONGODB_HOST_NAME:-mongodb}"
 
-  angularjs:
+  dncui:
     restart: unless-stopped
     build:
-      context: ./angularjs
+      context: ./dncui
       dockerfile: Dockerfile
-    expose:
-      - "4200"
+      #expose:
+      #- "19006"
     ports:
       - "${IOT_DASHBOARD_PORT_SSH:-6790}:22"
+      - "19006:19006"
     volumes:
-      - "${IOT_DASHBOARD_DATA}angularjs:/angularjs"
-    hostname: "${IOT_DASHBOARD_MQTT_HOST_NAME:-angularjs}"
-
+      - "${IOT_DASHBOARD_DATA}dncui:/dncui"
+    hostname: "${IOT_DASHBOARD_MQTT_HOST_NAME:-dncui}"
 
   dncapi:
     restart: unless-stopped
@@ -321,13 +329,35 @@ services:
       dockerfile: Dockerfile
     expose:
       - "8881"
-      - "8891"
+      - "8891" 
       - "8892"
     ports:
       - "${IOT_DASHBOARD_PORT_APISERVER_SSH:-8822}:22"
     volumes:
       - "${IOT_DASHBOARD_DATA}dncapi:/dncapi"
     hostname: "${IOT_DASHBOARD_APISERVER_HOST_NAME:-dncapi}" 
-    
-    
-    ### end of file ###
+
+  cron-backup:
+    restart: unless-stopped
+    build:
+      context: ./cron-backup
+      dockerfile: Dockerfile
+      args:
+        hostname: "${IOT_DASHBOARD_CRONBACKUP_MAIL_HOST_NAME:-cron-backup}"
+        relay_ip: "postfix:25"
+        domain: "${IOT_DASHBOARD_MAIL_DOMAIN:-.}"
+    hostname: "${IOT_DASHBOARD_CRONBACKUP_MAIL_HOST_NAME:-cron-backup}"
+    volumes:
+      - "${IOT_DASHBOARD_DATA}mongodb/mongodb-S3-bucket:/var/lib/mongodb-S3-bucket"
+      - "${IOT_DASHBOARD_DATA}mongodb/mongodb_data:/var/lib/mongodb"
+    environment:
+      CRON_BACKUP_MAIL: "${IOT_DASHBOARD_CRON_BACKUP_EMAIL:-}"
+      MONGO_INITDB_ROOT_USERNAME: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_USERNAME:-}"
+      MONGO_INITDB_ROOT_PASSWORD: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_PASSWORD:-}"
+      SOURCE_NAME: "${IOT_DASHBOARD_CERTBOT_FQDN}"
+      S3_BUCKET_MONGODB: "${IOT_DASHBOARD_AWS_S3_BUCKET_MONGODB:-.}"
+      AWS_ACCESS_KEY_ID: "${IOT_DASHBOARD_AWS_ACCESS_KEY_ID:-.}"
+      AWS_SECRET_ACCESS_KEY: "${IOT_DASHBOARD_AWS_SECRET_ACCESS_KEY:-.}"
+      AWS_DEFAULT_REGION: "${IOT_DASHBOARD_AWS_DEFAULT_REGION:-.}"
+
+### end of file ###
