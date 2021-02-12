@@ -1,0 +1,3 @@
+#!/bin/sh
+#cd /dncapi/dncbe && npm start
+cd /dncapi/dncbe && npm install && npm start

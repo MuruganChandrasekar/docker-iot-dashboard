@@ -1,0 +1,2 @@
+#!/bin/sh
+cd /dncapi/dncdemo && npm install && npm start
