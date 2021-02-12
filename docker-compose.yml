@@ -166,7 +166,7 @@ services:
     ports:
       - "${IOT_DASHBOARD_PORT_HTTP:-80}:80"
       - "${IOT_DASHBOARD_PORT_HTTPS:-443}:443"
-      - "27020:27020"
+      - "${IOT_DASHBOARD_PORT_MONGODB_PROXY:-27020}:27020"
     volumes:
       - "${IOT_DASHBOARD_DATA}docker-nginx/htdocs:/usr/local/nginx/htdocs"
       - "${IOT_DASHBOARD_DATA}docker-nginx/letsencrypt:/etc/letsencrypt"
@@ -236,21 +236,15 @@ services:
     volumes:
       - "${IOT_DASHBOARD_DATA}influxdb:/var/lib/influxdb"
      # Dircectory for influxdb metadata and database backup inside "./data"
-      - "${IOT_DASHBOARD_DATA}influxdb-backup:/var/lib/influxdb-backup"
+      - "${IOT_DASHBOARD_DATA}influx-backup:/var/lib/influxdb-backup"
       - "${IOT_DASHBOARD_DATA}influxdb-S3-bucket:/var/lib/influxdb-S3-bucket"
-      - "${IOT_DASHBOARD_DATA}mongodb/mongodb-S3-bucket:/var/lib/mongodb-S3-bucket"
-      - "${IOT_DASHBOARD_DATA}mongodb/mongodb_data:/var/lib/mongodb"
     environment:
       INFLUXDB_INIT_PWD: "${IOT_DASHBOARD_INFLUXDB_ADMIN_PASSWORD:-!notset}"
       PRE_CREATE_DB: "${IOT_DASHBOARD_INFLUXDB_INITIAL_DATABASE_NAME:-demo}"
       INFLUXDB_BIND_ADDRESS: "influxdb:8088"
       INFLUXDB_BACKUP_MAIL: "${IOT_DASHBOARD_INFLUXDB_BACKUP_EMAIL:-}"
-      MONGODB_BACKUP_MAIL: "${IOT_DASHBOARD_INFLUXDB_BACKUP_EMAIL:-}"
-      MONGO_INITDB_ROOT_USERNAME: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_USERNAME:-}"
-      MONGO_INITDB_ROOT_PASSWORD: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_PASSWORD:-}"
     # Backuping influxdb metadata and database to cloud
       SOURCE_NAME: "${IOT_DASHBOARD_CERTBOT_FQDN}"
-      S3_BUCKET_MONGODB: "${IOT_DASHBOARD_AWS_S3_BUCKET_MONGODB:-.}"
       S3_BUCKET_INFLUXDB: "${IOT_DASHBOARD_AWS_S3_BUCKET_INFLUXDB:-.}"
       AWS_ACCESS_KEY_ID: "${IOT_DASHBOARD_AWS_ACCESS_KEY_ID:-.}"
       AWS_SECRET_ACCESS_KEY: "${IOT_DASHBOARD_AWS_SECRET_ACCESS_KEY:-.}"
