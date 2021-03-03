@@ -281,7 +281,7 @@ services:
       dockerfile: Dockerfile
       args:
         hostname: "${IOT_DASHBOARD_MAIL_HOST_NAME:-.}"
-        relay_ip: "${IOT_DASHBOARD_MAIL_RELAY_IP:-.}"
+        relay_ip: "${IOT_DASHBOARD_MAIL_RELAY_IP:-}"
         domain: "${IOT_DASHBOARD_MAIL_DOMAIN:-.}"
         smtp_login: "${IOT_DASHBOARD_MAIL_SMTP_LOGIN:-.}"
         smtp_password: "${IOT_DASHBOARD_MAIL_SMTP_PASSWORD:-.}"
