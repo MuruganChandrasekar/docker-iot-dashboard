@@ -49,8 +49,8 @@ run postmap /etc/postfix/generic
 RUN mkdir -p /opt/backup
 WORKDIR "/opt/backup"
 
-# To backup influxdb to S3 Bucket, some packages need to be installed as follows:
-RUN apt-get update && apt-get install -y python-pip influxdb
+# To backup Mongodb to S3 Bucket, some packages need to be installed as follows:
+RUN apt-get update && apt-get install -y python-pip
 RUN pip install s3cmd
 ARG AWS_ACCESS_KEY_ID
 ARG AWS_DEFAULT_REGION
