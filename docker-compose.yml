@@ -230,6 +230,12 @@ services:
         hostname: "${IOT_DASHBOARD_INFLUXDB_MAIL_HOST_NAME:-.}"
         relay_ip: "postfix:25"
         domain: "${IOT_DASHBOARD_MAIL_DOMAIN:-.}"
+      # Backing up influxdb metadata and database to S3 Bucket
+        AWS_ACCESS_KEY_ID: "${IOT_DASHBOARD_AWS_ACCESS_KEY_ID:-.}"
+        AWS_SECRET_ACCESS_KEY: "${IOT_DASHBOARD_AWS_SECRET_ACCESS_KEY:-.}"
+        AWS_DEFAULT_REGION: "${IOT_DASHBOARD_AWS_DEFAULT_REGION:-.}"
+        AWS_HOST_BASE: "${IOT_DASHBOARD_AWS_HOST_BASE:-.}"
+        AWS_HOST_BUCKET_INFLUXDB: "${IOT_DASHBOARD_AWS_HOST_BUCKET:-.}"
     hostname: "${IOT_DASHBOARD_INFLUXDB_MAIL_HOST_NAME:-.}"
     expose:
       - "8086"
@@ -243,12 +249,8 @@ services:
       PRE_CREATE_DB: "${IOT_DASHBOARD_INFLUXDB_INITIAL_DATABASE_NAME:-demo}"
       INFLUXDB_BIND_ADDRESS: "influxdb:8088"
       INFLUXDB_BACKUP_MAIL: "${IOT_DASHBOARD_INFLUXDB_BACKUP_EMAIL:-}"
-    # Backuping influxdb metadata and database to cloud
       SOURCE_NAME: "${IOT_DASHBOARD_CERTBOT_FQDN}"
       S3_BUCKET_INFLUXDB: "${IOT_DASHBOARD_AWS_S3_BUCKET_INFLUXDB:-.}"
-      AWS_ACCESS_KEY_ID: "${IOT_DASHBOARD_AWS_ACCESS_KEY_ID:-.}"
-      AWS_SECRET_ACCESS_KEY: "${IOT_DASHBOARD_AWS_SECRET_ACCESS_KEY:-.}"
-      AWS_DEFAULT_REGION: "${IOT_DASHBOARD_AWS_DEFAULT_REGION:-.}"
 
   grafana:
     restart: unless-stopped
@@ -323,13 +325,13 @@ services:
       dockerfile: Dockerfile
     expose:
       - "8881"
-      - "8891" 
+      - "8891"
       - "8892"
     ports:
       - "${IOT_DASHBOARD_PORT_APISERVER_SSH:-8822}:22"
     volumes:
       - "${IOT_DASHBOARD_DATA}dncapi:/dncapi"
-    hostname: "${IOT_DASHBOARD_APISERVER_HOST_NAME:-dncapi}" 
+    hostname: "${IOT_DASHBOARD_APISERVER_HOST_NAME:-dncapi}"
 
   cron-backup:
     restart: unless-stopped
@@ -340,6 +342,12 @@ services:
         hostname: "${IOT_DASHBOARD_CRONBACKUP_MAIL_HOST_NAME:-cron-backup}"
         relay_ip: "postfix:25"
         domain: "${IOT_DASHBOARD_MAIL_DOMAIN:-.}"
+      # Backing up Mongodb metadata and database to S3 Bucket
+        AWS_ACCESS_KEY_ID: "${IOT_DASHBOARD_AWS_ACCESS_KEY_ID:-.}"
+        AWS_SECRET_ACCESS_KEY: "${IOT_DASHBOARD_AWS_SECRET_ACCESS_KEY:-.}"
+        AWS_DEFAULT_REGION: "${IOT_DASHBOARD_AWS_DEFAULT_REGION:-.}"
+        AWS_HOST_BASE: "${IOT_DASHBOARD_AWS_HOST_BASE:-.}"
+        AWS_HOST_BUCKET_MONGODB: "${IOT_DASHBOARD_AWS_HOST_BUCKET_MONGODB:-.}"
     hostname: "${IOT_DASHBOARD_CRONBACKUP_MAIL_HOST_NAME:-cron-backup}"
     volumes:
       - "${IOT_DASHBOARD_DATA}mongodb/mongodb-S3-bucket:/var/lib/mongodb-S3-bucket"
@@ -350,8 +358,4 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_PASSWORD:-}"
       SOURCE_NAME: "${IOT_DASHBOARD_CERTBOT_FQDN}"
       S3_BUCKET_MONGODB: "${IOT_DASHBOARD_AWS_S3_BUCKET_MONGODB:-.}"
-      AWS_ACCESS_KEY_ID: "${IOT_DASHBOARD_AWS_ACCESS_KEY_ID:-.}"
-      AWS_SECRET_ACCESS_KEY: "${IOT_DASHBOARD_AWS_SECRET_ACCESS_KEY:-.}"
-      AWS_DEFAULT_REGION: "${IOT_DASHBOARD_AWS_DEFAULT_REGION:-.}"
-
 ### end of file ###
