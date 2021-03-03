@@ -25,11 +25,13 @@ do
 done < "/mongo_dbs.txt"
 
 tar czf /var/lib/mongodb-S3-bucket/${SOURCE_NAME}_db_backup_${DATE1}.tgz /var/lib/mongodb-backup/. && rsync -avr /var/lib/mongodb/ /root/mongodb_data/ && tar czf /var/lib/mongodb-S3-bucket/${SOURCE_NAME}_data_directory_backup_${DATE1}.tgz /root/mongodb_data/.
+        
+
+s3cmd sync --no-mime-magic /var/lib/mongodb-S3-bucket/ s3://${S3_BUCKET_MONGODB}/
 
 # Moving the backup to S3 bucket
 if [ $? -eq 0 ]; then
 
-        s3cmd sync --no-mime-magic /var/lib/mongodb-S3-bucket/ s3://${S3_BUCKET_MONGODB}/
         echo "DATE:" $DATE > /mongodbbackup.txt
         echo " " >> /mongodbbackup.txt
         echo "DESCRIPTION: ${SOURCE_NAME}_Mongodb backup" >> /mongodbbackup.txt
