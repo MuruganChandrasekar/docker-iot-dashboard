@@ -46,11 +46,28 @@
 #       The AWS default region.
 #
 # IOT_DASHBOARD_AWS_S3_BUCKET_INFLUXDB
-#       The S3 bucket to use for uploading the influxdb backup data.
+#       The S3 bucket to be used for uploading the influxdb backup data.
 #
 # IOT_DASHBOARD_AWS_SECRET_ACCESS_KEY
 #       The AWS API secret key for backing up influxdb data.
 #
+# IOT_DASHBOARD_AWS_S3_BUCKET_MONGODB
+#		The S3 bucket to be used for uploading the MONGODB backup data.
+#
+# IOT_DASHBOARD_AWS_HOST_BASE
+#		The S3 endpoint is used to configure 3rd party clients. 
+#		For Amazon:  s3.amazonaws.com , For DigitalOcean: nyc3.digitaloceanspaces.com
+#
+# IOT_DASHBOARD_AWS_HOST_BUCKET_INFLUXDB
+#		The S3 endpoint to access Influxdb bucket.
+#		For Amazon: '%($IOT_DASHBOARD_AWS_S3_BUCKET_INFLUXDB)s.s3.amazonaws.com'
+#		For DigitalOcean: '%($IOT_DASHBOARD_AWS_S3_BUCKET_INFLUXDB).nyc3.digitaloceanspaces.com'
+#
+# IOT_DASHBOARD_AWS_HOST_BUCKET_MONGODB
+#		The S3 endpoint to access Mongodb bucket.
+#		For Amazon: '%($IOT_DASHBOARD_AWS_S3_BUCKET_MONGODB)s.s3.amazonaws.com'
+#		For DigitalOcean: '%($IOT_DASHBOARD_AWS_S3_BUCKET_MONGODB).nyc3.digitaloceanspaces.com'
+#		
 # IOT_DASHBOARD_CERTBOT_EMAIL
 #	The email address to be used for registering with Let's Encrypt.
 #
@@ -147,13 +164,20 @@
 # IOT_DASHBOARD_INFLUXDB_BACKUP_EMAIL
 #       Backup mail will be sent to the mentioned MAIL IDs. Use "space" to delimit the MAIL IDs.
 #
+# IOT_DASHBOARD_MONGO_INITDB_ROOT_USERNAME
+#       The Username to be used for accessing Mongodb.
+#
+#  IOT_DASHBOARD_MONGO_INITDB_ROOT_PASSWORD
+#       The Password to be used for accessing Mongodb root user.
+#
+# 
 #---
 
 # Also see nginx/setup.sh, which uses some additional test variables when
 # debugging.
 #
 
-version: '3.7'
+version: '3.8'
 services:
   # the nginx server connects us to the outside world
   nginx:
@@ -226,7 +250,7 @@ services:
       dockerfile: Dockerfile
       args:
         distrib_id: "${IOT_DASHBOARD_OS_DISTRIB_ID:-ubuntu}"
-        distrib_codename: "${IOT_DASHBOARD_OS_DISTRIB_CODENAME:-xenial}"
+        distrib_codename: "${IOT_DASHBOARD_OS_DISTRIB_CODENAME:-bionic}"
         hostname: "${IOT_DASHBOARD_INFLUXDB_MAIL_HOST_NAME:-.}"
         relay_ip: "postfix:25"
         domain: "${IOT_DASHBOARD_MAIL_DOMAIN:-.}"
@@ -282,14 +306,14 @@ services:
       context: ./postfix
       dockerfile: Dockerfile
       args:
-        hostname: "${IOT_DASHBOARD_MAIL_HOST_NAME:-.}"
+        hostname: "${IOT_DASHBOARD_MAIL_HOST_NAME:-}"
         relay_ip: "${IOT_DASHBOARD_MAIL_RELAY_IP:-}"
-        domain: "${IOT_DASHBOARD_MAIL_DOMAIN:-.}"
-        smtp_login: "${IOT_DASHBOARD_MAIL_SMTP_LOGIN:-.}"
-        smtp_password: "${IOT_DASHBOARD_MAIL_SMTP_PASSWORD:-.}"
+        domain: "${IOT_DASHBOARD_MAIL_DOMAIN:-}"
+        smtp_login: "${IOT_DASHBOARD_MAIL_SMTP_LOGIN:-}"
+        smtp_password: "${IOT_DASHBOARD_MAIL_SMTP_PASSWORD:-}"
     expose:
       - "25"
-    hostname: "${IOT_DASHBOARD_MAIL_HOST_NAME:-.}"
+    hostname: "${IOT_DASHBOARD_MAIL_HOST_NAME:-}"
 
   mongodb:
     restart: unless-stopped
@@ -297,11 +321,11 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_USERNAME:-}"
       MONGO_INITDB_ROOT_PASSWORD: "${IOT_DASHBOARD_MONGO_INITDB_ROOT_PASSWORD:-}"
-      #expose:
-    ports:
-      - "27017:27017"
+    expose:
+      - "27017"
     volumes:
       - "${IOT_DASHBOARD_DATA}mongodb/mongodb_data:/data/db"
+      - "${IOT_DASHBOARD_DATA}mongodb/mongodb_backup:/var/lib/mongodb_backup"
     hostname: "${IOT_DASHBOARD_MONGODB_HOST_NAME:-mongodb}"
 
   dncui:

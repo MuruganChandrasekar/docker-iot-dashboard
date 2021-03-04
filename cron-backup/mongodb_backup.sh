@@ -24,8 +24,8 @@ do
   mongodump --host mongodb:27017 --db $db --authenticationDatabase admin -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD -o /var/lib/mongodb-backup/
 done < "/mongo_dbs.txt"
 
-tar czf /var/lib/mongodb-S3-bucket/${SOURCE_NAME}_db_backup_${DATE1}.tgz /var/lib/mongodb-backup/. && rsync -avr /var/lib/mongodb/ /root/mongodb_data/ && tar czf /var/lib/mongodb-S3-bucket/${SOURCE_NAME}_data_directory_backup_${DATE1}.tgz /root/mongodb_data/.
-        
+tar czf /var/lib/mongodb-S3-bucket/${SOURCE_NAME}_mongodb_db_backup_${DATE1}.tgz /var/lib/mongodb-backup/. && rsync -avr /var/lib/mongodb/ /root/mongodb_data/ && tar czf /var/lib/mongodb-S3-bucket/${SOURCE_NAME}_mongodb_data_backup_${DATE1}.tgz /root/mongodb_data/.
+ 
 
 s3cmd sync --no-mime-magic /var/lib/mongodb-S3-bucket/ s3://${S3_BUCKET_MONGODB}/
 
@@ -40,11 +40,11 @@ if [ $? -eq 0 ]; then
         echo " " >> /mongodbbackup.txt
         echo "******* Mongodb Database Backup ****************" >> /mongodbbackup.txt
         echo " " >> /mongodbbackup.txt
-        s3cmd ls --no-mime-magic s3://${S3_BUCKET_MONGODB}/  --human-readable | grep -i ${SOURCE_NAME}_db | cut -d' ' -f3- | tac | head -10 | sed "s/s3:\/\/${S3_BUCKET_MONGODB}\///g" &>> /mongodbbackup.txt
+        s3cmd ls --no-mime-magic s3://${S3_BUCKET_MONGODB}/  --human-readable | grep -i ${SOURCE_NAME}_mongodb_db | cut -d' ' -f3- | tac | head -10 | sed "s/s3:\/\/${S3_BUCKET_MONGODB}\///g" &>> /mongodbbackup.txt
         echo " " >> /mongodbbackup.txt
         echo "************** Mongodb data Backup *************" >> /mongodbbackup.txt
         echo " " >> /mongodbbackup.txt
-        s3cmd ls --no-mime-magic s3://${S3_BUCKET_MONGODB}/  --human-readable | grep -i ${SOURCE_NAME}_data | cut -d' ' -f3- | tac | head -10 | sed "s/s3:\/\/${S3_BUCKET_MONGODB}\///g" &>> /mongodbbackup.txt
+        s3cmd ls --no-mime-magic s3://${S3_BUCKET_MONGODB}/  --human-readable | grep -i ${SOURCE_NAME}_mongodb_data | cut -d' ' -f3- | tac | head -10 | sed "s/s3:\/\/${S3_BUCKET_MONGODB}\///g" &>> /mongodbbackup.txt
         echo " " >> /mongodbbackup.txt
         echo "********************** END *********************" >> /mongodbbackup.txt
 

@@ -26,7 +26,7 @@ do
 done < "/data.txt"
 
 
-tar czf /var/lib/influxdb-S3-bucket/${SOURCE_NAME}_metdata_db_backup_${DATE1}.tar.gz /var/lib/influxdb-backup/ && tar czf /var/lib/influxdb-S3-bucket/${SOURCE_NAME}_data_directory_backup_${DATE1}.tar.gz /var/lib/influxdb/
+tar czf /var/lib/influxdb-S3-bucket/${SOURCE_NAME}_influxdb_metdata_db_backup_${DATE1}.tgz /var/lib/influxdb-backup/ && tar czf /var/lib/influxdb-S3-bucket/${SOURCE_NAME}_influxdb_data_backup_${DATE1}.tgz /var/lib/influxdb/
 
 s3cmd sync --no-mime-magic /var/lib/influxdb-S3-bucket/ s3://${S3_BUCKET_INFLUXDB}/
 
@@ -41,11 +41,11 @@ if [ $? -eq 0 ]; then
         echo " " >> /influxbackup.txt
         echo "******* Influxdb Database & metadata Backup ********" >> /influxbackup.txt
         echo " " >> /influxbackup.txt
-        s3cmd ls --no-mime-magic s3://${S3_BUCKET_INFLUXDB}/  --human-readable | grep -i ${SOURCE_NAME}_metdata | cut -d' ' -f3- | tac | head -10 | sed "s/s3:\/\/${S3_BUCKET_INFLUXDB}\///g" &>> /influxbackup.txt
+        s3cmd ls --no-mime-magic s3://${S3_BUCKET_INFLUXDB}/  --human-readable | grep -i ${SOURCE_NAME}_influxdb_metdata_db | cut -d' ' -f3- | tac | head -10 | sed "s/s3:\/\/${S3_BUCKET_INFLUXDB}\///g" &>> /influxbackup.txt
         echo " " >> /influxbackup.txt
         echo "************** Influxdb data Backup ****************" >> /influxbackup.txt
         echo " " >> /influxbackup.txt
-        s3cmd ls --no-mime-magic s3://${S3_BUCKET_INFLUXDB}/  --human-readable | grep -i ${SOURCE_NAME}_data | cut -d' ' -f3- | tac | head -10 | sed "s/s3:\/\/${S3_BUCKET_INFLUXDB}\///g" &>> /influxbackup.txt
+        s3cmd ls --no-mime-magic s3://${S3_BUCKET_INFLUXDB}/  --human-readable | grep -i ${SOURCE_NAME}_influxdb_data | cut -d' ' -f3- | tac | head -10 | sed "s/s3:\/\/${S3_BUCKET_INFLUXDB}\///g" &>> /influxbackup.txt
         echo " " >> /influxbackup.txt
         echo "********************** END *********************  " >> /influxbackup.txt
 
