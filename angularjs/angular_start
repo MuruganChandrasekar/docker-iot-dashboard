@@ -1,4 +1,6 @@
 #!/bin/sh
 ##cd /angularjs/dncApp/ && /usr/bin/ng serve --host 0.0.0.0 --disableHostCheck
+cd /dncui/expo/dnc-ui/ && npm install
+cd /dncui/expo/dnc-ui/ && /usr/bin/expo start -w
 
 #--host=angularjs --port=4200

@@ -11,7 +11,14 @@ FROM phusion/baseimage
 RUN apt-get update 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get install nodejs -y
-RUN npm install -g @angular/cli
+#RUN npm install -g @angular/cli
+#RUN apt-get install npm -y
+RUN npm install expo-cli --global
+RUN npm install yarn babel-core babel-loader babel-preset-es2015 babel-preset-react
+
+#RUN npm audit fix
+#RUN apt-get install npm -y
+#npm install expo-cli --global
 #RUN apt-get install npm -y
 COPY id_rsa.pub /tmp/id_rsa.pub
 RUN cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys && rm -f /tmp/id_rsa.pub

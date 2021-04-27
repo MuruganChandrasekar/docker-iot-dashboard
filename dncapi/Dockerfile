@@ -22,3 +22,9 @@ RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 #TO start DNC-API during system boot
 COPY nodejs_start /etc/service/nodejs_start/run
 RUN chmod +x /etc/service/nodejs_start/run
+
+COPY dncbe_start /etc/service/dncbe_start/run
+RUN chmod +x /etc/service/dncbe_start/run
+
+COPY dncapp_start /etc/service/dncapp_start/run
+RUN chmod +x /etc/service/dncapp_start/run

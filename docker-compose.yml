@@ -313,11 +313,13 @@ services:
     build:
       context: ./angularjs
       dockerfile: Dockerfile
+      #expose:
+      #- "19006"
     ports:
       - "${IOT_DASHBOARD_PORT_SSH:-6790}:22"
-      - "4205:4200"
+      - "19006:19006"
     volumes:
-      - "${IOT_DASHBOARD_DATA}angularjs:/angularjs"
+      - "${IOT_DASHBOARD_DATA}apiserver:/dncui"
     hostname: "${IOT_DASHBOARD_MQTT_HOST_NAME:-angularjs}"
 
 
@@ -330,7 +332,12 @@ services:
       #- "${IOT_DASHBOARD_PORT_APISERVER_SSH:-6789}:22"
         #expose:
     ports:
-      - "8881:8881"
+      - "8881:8881" # demo- worlmap-panel
+      - "8891:8891" # BE-API
+      - "8892:8892" # App-API
+      - "8893:8893" # Generic DNC server
+      - "8894:8894" # DNC standard Plugin
+      - "8895:8895" # DNC Granfana Influx Plugin
       - "${IOT_DASHBOARD_PORT_APISERVER_SSH:-8822}:22"
     volumes:
       - "${IOT_DASHBOARD_DATA}apiserver:/dncapi"
